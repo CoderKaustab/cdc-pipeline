@@ -1,0 +1,5 @@
+{
+	"pipeline_metadata_files" : [
+		"mysql-cdc-cqrs-pipeline.json"
+	]
+}

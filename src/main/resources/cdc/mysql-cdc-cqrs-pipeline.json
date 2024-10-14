@@ -1,0 +1,167 @@
+{
+	"pipeline_name": "mysql-cdc-cqrs-pipeline",
+	
+	"source": {
+		"class": "co.kaustab.cdc.listener.MysqlDefaultCdcListener",
+		"source_config": {
+			"name": "mysql-rds-connector-v1",
+			"config": {
+				"name": "mysql-rds-connector-v4",
+				"connector.class": "io.debezium.connector.mysql.MySqlConnector",
+				
+				"bootstrap.servers" : "localhost:9092",
+				"offset.storage" : "org.apache.kafka.connect.storage.KafkaOffsetBackingStore",
+				"offset.storage.topic": "offset-storage-topic",
+				"offset.storage.partitions": "1",
+				"offset.storage.replication.factor" : "1",
+				"offset.flush.interval.ms": "1000",
+				
+				"database.hostname": "<your db/rds host goes here that has bin logging enabled>",
+				"database.port": "3306",
+				"database.user": "<db username>",
+				"database.password": "<jasypt encryped db password>",
+				
+				"database.server.id": "11",
+				"include.schema.changes": "false",
+				"database.server.name": "dbz_server_rds_mysql",
+				"database.whitelist": "co_kaustab_cqrs",
+				
+				"snapshot.mode": "when_needed",
+				"snapshot.include.collection.list" : "co_kaustab_cqrs.Home4,co_kaustab_cqrs.emp",
+				"snapshot.locking.mode" : "minimal",
+				"heartbeat.interval.ms" : "1000",
+				
+				"table.whitelist": "co_kaustab_cqrs.Home4,co_kaustab_cqrs.emp",
+				"database.history.kafka.bootstrap.servers": "localhost:9092",
+				"database.history.kafka.topic": "alpha-dbz3",
+				"transforms": "route",
+				"transforms.route.type": "org.apache.kafka.connect.transforms.RegexRouter",
+				"transforms.route.regex": "([^.]+)\\.([^.]+)\\.([^.]+)",
+				"transforms.route.replacement": "$3"
+			}
+		}
+	},
+	"sinks": [
+		{
+			"name": "redis-sink-test",
+			"bean_service": "redisHashSink",
+			"sink_config": {
+				"redis.server.host" : "localhost",
+				"redis.server.port" : "6379",
+				"insert.mode": "upsert",
+				"pk.fields": "id",
+				"whitelisted_tables": "co_kaustab_cqrs.Home4,co_kaustab_cqrs.emp",
+				"whitelisted_columns": {
+					"co_kaustab_cqrs.Home4": "class_type,email,email_confirmed",
+					"co_kaustab_cqrs.emp": "id,name,mail"
+				}
+			},
+			"table_name_aliases": {
+				"co_kaustab_cqrs.Home4": "home",
+				"co_kaustab_cqrs.emp": "emp"
+			},
+			"column_name_aliases": {
+				"co_kaustab_cqrs.Home4.class_type": "cType",
+				"co_kaustab_cqrs.Home4.email": "mail",
+				"co_kaustab_cqrs.Home4.email_confirmed": "cMail",
+				"co_kaustab_cqrs.emp.name": "nm"
+			}
+		},
+		{
+			"name": "kafka-sink-test",
+			"bean_service": "kafkaMessagingService",
+			"sink_config": {
+				"producer_config": {
+					"bootstrap.servers": "localhost:9092",
+					"retries": "0",
+					"batch.size": "16384",
+					"linger.ms": "1",
+					"buffer.memory": "33554432",
+					"key.serializer": "org.apache.kafka.common.serialization.StringSerializer",
+					"value.serializer": "org.apache.kafka.common.serialization.StringSerializer",
+					"client.id": "co.bytematk.cdc.client.kafka"
+				},
+				"whitelisted_tables": "co_kaustab_cqrs.Home4,co_kaustab_cqrs.emp",
+				"messages": [
+					{
+						"message_sources": "co_kaustab_cqrs.Home4",
+						"message_sinks": [
+							{
+								"topics": "topic_home_alpha",
+								"message_builder_component": "CdcNewDataKafkaMessageBuilder"
+							}
+						]
+					},
+					{
+						"message_sources": "co_kaustab_cqrs.emp,co_kaustab_cqrs.empV2",
+						"message_sinks": [
+							{
+								"topics": "topic_emp_alpha,topic_emp_uat",
+								"message_builder_component": "CdcNewDataKafkaMessageBuilder"
+							},
+							{
+								"topics": "topic_audit_alpha",
+								"message_builder_component": "CdcRawDataKafkaMessageBuilder"
+							}
+						]
+					}
+				]
+			}
+		},
+		{
+			"name": "oltp-migration-test",
+			"bean_service": "jdbcSink",
+			"sink_config": {
+				"whitelisted_tables": "co_kaustab_cqrs.Home4",
+				"connection.url": "jdbc:mysql://localhost:3306/test",
+				"connection.username": "root",
+				"connection.password": "WDiC/QyM0x1oPlybMKy40w==",
+				"database.whitelist": "test",
+				"insert.mode": "insert",
+				"pk.fields": "id",
+				"datasource.driverClassName": "com.mysql.jdbc.Driver",
+				"connector.class": "io.confluent.connect.jdbc.JdbcSinkConnector",
+				"pk.mode": "record_key",
+				"transforms": "unwrap",
+				"transforms.unwrap.type": "io.debezium.transforms.UnwrapFromEnvelope",
+				"delete.enabled": "true",
+				"auto.create": "true",
+				"tasks.max": "1"
+			}
+		},
+		{
+			"name": "replication-test",
+			"bean_service": "jdbcSink",
+			"sink_config": {
+				"whitelisted_tables": "co_kaustab_cqrs.emp",
+				"connection.url": "jdbc:mysql://localhost:3306/test",
+				"connection.username": "root",
+				"connection.password": "WDiC/QyM0x1oPlybMKy40w==",
+				"database.whitelist": "test",
+				"insert.mode": "upsert",
+				"pk.fields": "id",
+				"datasource.driverClassName": "com.mysql.jdbc.Driver",
+				"connector.class": "io.confluent.connect.jdbc.JdbcSinkConnector",
+				"pk.mode": "record_key",
+				"transforms": "unwrap",
+				"transforms.unwrap.type": "io.debezium.transforms.UnwrapFromEnvelope",
+				"delete.enabled": "true",
+				"auto.create": "true",
+				"tasks.max": "1"
+			}
+		},
+		{
+			"name": "mongo-cqrs-test",
+			"bean_service": "mongoSink",
+			"sink_config": {
+				"mongo.db.host" : "db1-c1-dev3.cluster-cdqenn9vmfhg.us-east-1.docdb.amazonaws.com",
+				"mongo.db.port" : 27017,
+				"database.whitelist" : "document-event-store-ALPHA",
+				"connection.username" : "kaustabmongo",
+				"connection.password" : "hqxT7p6VbzjZ0+152eNmepK74IzPTKFJ",
+				"pk.fields" : "id",
+				"insert.mode" : "insert"
+			}
+		}
+	]
+}

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+
+
+	<div>
+		<div>
+			<h1>Kafka Offset Store: binlog tails - </h1>
+		</div>
+		<table border="1">
+			<thead>
+				<tr>
+					<th width="5%">No</th>
+					<th width="90%">Name</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr data-th-each="item : ${data}">
+					<td>[[${itemStat.index + 1}]]</td>
+					<td>[[${item}]]</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
