@@ -113,9 +113,9 @@
 			"bean_service": "jdbcSink",
 			"sink_config": {
 				"whitelisted_tables": "co_kaustab_cqrs.Home4",
-				"connection.url": "jdbc:mysql://localhost:3306/test",
-				"connection.username": "root",
-				"connection.password": "WDiC/QyM0x1oPlybMKy40w==",
+				"connection.url": "jdbc:mysql://<db host>/<db name>",
+				"connection.username": "<db user name>",
+				"connection.password": "<db password in jasypt encrypted format>",
 				"database.whitelist": "test",
 				"insert.mode": "insert",
 				"pk.fields": "id",
@@ -134,9 +134,9 @@
 			"bean_service": "jdbcSink",
 			"sink_config": {
 				"whitelisted_tables": "co_kaustab_cqrs.emp",
-				"connection.url": "jdbc:mysql://localhost:3306/test",
-				"connection.username": "root",
-				"connection.password": "WDiC/QyM0x1oPlybMKy40w==",
+				"connection.url": "jdbc:mysql://<db host>/<db name>",
+				"connection.username": "<db user name>",
+				"connection.password": "<jasypt encrypted db password>",
 				"database.whitelist": "test",
 				"insert.mode": "upsert",
 				"pk.fields": "id",
@@ -154,11 +154,11 @@
 			"name": "mongo-cqrs-test",
 			"bean_service": "mongoSink",
 			"sink_config": {
-				"mongo.db.host" : "db1-c1-dev3.cluster-cdqenn9vmfhg.us-east-1.docdb.amazonaws.com",
+				"mongo.db.host" : "<your mongo db host name>",
 				"mongo.db.port" : 27017,
-				"database.whitelist" : "document-event-store-ALPHA",
-				"connection.username" : "kaustabmongo",
-				"connection.password" : "hqxT7p6VbzjZ0+152eNmepK74IzPTKFJ",
+				"database.whitelist" : "<db name>",
+				"connection.username" : "<MongoDB user name>",
+				"connection.password" : "<jasypt encrypted MongoDB password>",
 				"pk.fields" : "id",
 				"insert.mode" : "insert"
 			}
