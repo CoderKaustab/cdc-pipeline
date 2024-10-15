@@ -41,9 +41,11 @@ public class MysqlDefaultCdcListener extends BaseCdcListener {
 		}
 
 		try {
+			log.info("struct ---->"+sourceRecord.value());
+			
 			Operation operation = super.getOperationType(sourceRecord);
 
-			if (operation != Operation.READ) {
+			if (operation != null && operation != Operation.READ) {
 				
 				String source = getFormattedSource(sourceRecord);
 				

@@ -15,6 +15,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 
 @Component
 public class JsonUtils {
@@ -107,6 +108,7 @@ public class JsonUtils {
 		ObjectMapper objectMapper = new ObjectMapper();
 		String orderJson = null;
 		try {
+			objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
 			orderJson = objectMapper.writeValueAsString(inputObj);
 		} catch (Exception e) {
 			e.printStackTrace();

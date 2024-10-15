@@ -109,6 +109,9 @@ public abstract class BaseCdcListener {
 
 	public final Operation getOperationType(SourceRecord sourceRecord) {
 		Struct sourceRecordValue = (Struct) sourceRecord.value();
+		if(!sourceRecord.value().toString().contains(io.debezium.data.Envelope.FieldName.OPERATION)) {
+			return null;
+		}
 		String operationName = (String) sourceRecordValue.get(io.debezium.data.Envelope.FieldName.OPERATION);
 		Operation operation = Operation.forCode(operationName);
 		return operation;
