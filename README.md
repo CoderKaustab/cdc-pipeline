@@ -37,7 +37,7 @@ This project is designed to create a data pipeline that captures Change Data Cap
 
 12. Once the sinks are initialized, the MySQL Debezium connector is started, which will first capture a database snapshot and then begin reading the binlog for CDC. Please note that the Debezium connector will fail to launch if the MySQL source database does not have binary logging (binlog) enabled, as this is a pre-requisite for Debezium. You can check whether binlog is enabled by running the following MySQL command:
 
-SHOW VARIABLES LIKE 'log_bin';
+    SHOW VARIABLES LIKE 'log_bin';
 
 
 
