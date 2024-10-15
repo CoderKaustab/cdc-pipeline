@@ -103,6 +103,7 @@ If a new sink type is needed then the following steps can be performed:
 
 <br>
 <br>
+
 ### Monitoring: ###
 1. bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic offset-storage-topic --from-beginning => Monitor Debezium
 2. You can check the latest CDC items on - http://localhost:8084/
