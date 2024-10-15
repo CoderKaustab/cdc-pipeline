@@ -14,6 +14,7 @@ import org.springframework.web.context.support.GenericWebApplicationContext;
 import co.kaustab.cdc.model.CustomDebeziumConfiguration;
 import co.kaustab.cdc.model.DebeziumPipeline;
 import co.kaustab.cdc.model.DebeziumSourceConnectorConfiguration;
+import co.kaustab.cdc.resource.KafkaListeners;
 import co.kaustab.cdc.service.sink.SinkService;
 import co.kaustab.cdc.utils.JasyptUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -73,6 +74,9 @@ public class CdcListenerRegistrationConfig {
 				cdcListenerGenericBeanDefinition);
 		log.info("sourceConnectorName bean: " + sourceConnectorName + " from context ---> "
 				+ context.getBean(sourceConnectorName)); // required for invoking constructor
+		
+		String monitorTopic = sourceConnectorConfig.getConnectorConfigs().get("offset.storage.topic");
+		KafkaListeners.monitorTopicConnector.put(monitorTopic, sourceConnectorName);
 	}
 
 	public static String getDebeziumSourceConnectorConfigBeanName(String connectorName) {

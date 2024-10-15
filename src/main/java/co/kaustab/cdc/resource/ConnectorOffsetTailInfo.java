@@ -6,7 +6,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 
 public class ConnectorOffsetTailInfo {
 
-	private static int TAIL_SIZE = 15;
+	private static int TAIL_SIZE = 100;
 	
 	private static Map<String, ArrayBlockingQueue<String>> tailInfo = new HashMap<>();
 	
