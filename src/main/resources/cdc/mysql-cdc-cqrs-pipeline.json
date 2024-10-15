@@ -79,7 +79,7 @@
 					"buffer.memory": "33554432",
 					"key.serializer": "org.apache.kafka.common.serialization.StringSerializer",
 					"value.serializer": "org.apache.kafka.common.serialization.StringSerializer",
-					"client.id": "co.bytematk.cdc.client.kafka"
+					"client.id": "co.kaustab.cdc.client.kafka"
 				},
 				"whitelisted_tables": "co_kaustab_cqrs.Home4,co_kaustab_cqrs.emp",
 				"messages": [
