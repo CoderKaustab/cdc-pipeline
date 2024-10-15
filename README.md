@@ -71,12 +71,12 @@ Currently, the project supports only the Mysql Debezium Connector.
 
 1. If any customization is required, that can be done by updating the code of - co.kaustab.cdc.listener.MysqlDefaultCdcListener.
 
-2. In case a new connector type (e.g: Mongo Debezium connector) is required, that can be done in the following way:
-    a. Add the deuterium-connector dependency in the pom.xml
-    b. Create a child class of BaseCdcListener in the co.kaustab.cdc.listener package.
-    c. Override the handleCdcEvent() method.
-    d. In the pipeline file point source.class value to your newly created CDCListener class.
-    e. Update the source.source_config as per your requirement.
+2. In case a new connector type (e.g: Mongo Debezium connector) is required, that can be done in the following way: <br>
+    a. Add the deuterium-connector dependency in the pom.xml<br>
+    b. Create a child class of BaseCdcListener in the co.kaustab.cdc.listener package.<br>
+    c. Override the handleCdcEvent() method.<br>
+    d. In the pipeline file point source.class value to your newly created CDCListener class.<br>
+    e. Update the source.source_config as per your requirement.<br>
 
 
 <br>
