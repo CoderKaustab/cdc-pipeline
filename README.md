@@ -1,4 +1,4 @@
-# CDC Data Pipeline from MySQL to Various Sinks #
+# CDC Data Pipeline with Debezium #
 
 This project is designed to create a data pipeline that captures Change Data Capture (CDC) events from a source Mysql database and streams them to various sinks as depicted in the following diagram : 
 
