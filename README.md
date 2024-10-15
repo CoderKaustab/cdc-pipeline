@@ -1,4 +1,4 @@
-# Data Pipeline for CDC from MySQL to Various Sinks #
+# CDC Data Pipeline from MySQL to Various Sinks #
 
 This project is designed to create a data pipeline that captures Change Data Capture (CDC) events from a source Mysql database and streams them to various sinks as depicted in the following diagram : 
 
@@ -10,6 +10,25 @@ This project is designed to create a data pipeline that captures Change Data Cap
 <br>
 <br>
 
+# Uses #
+
+1. Lightweight and thus a good alternative to database trigger
+2. OLTP to OLAP conversion - useful for database audit
+3. Creating data replication
+4. Sharing data between microservices in real-time
+5. Data can be synced in various data centers like - HDFS, Redis, etc maintaining eventual consistency which is a good alternative of traditional ETL process.
+
+<br>
+<br>
+
+# Disadvantage: #
+
+1. Needs to connect with Master database with bin log enabled. It doesn't work on read replicas. 
+2. Connecting to different sources & sinks may cause PCI problems & security challenges.
+3. While creating consistent snapshots it acquires read/write locks so there can be a downtime while Debezium creates a snapshot. We need to configure the connector properly so that snapshot time can be kept minimum. Or else we need to opt for some other snapshot strategy. For details you can go through the Debexium official website here - https://debezium.io/documentation/
+
+<br>
+<br>
 
 ### Start the application: ###
 
@@ -81,3 +100,9 @@ If a new sink type is needed then the following steps can be performed:
   5. Now, you will need to launch the sink (e.g. Kafka consumer, AWS client, etc) on the application startup. 
      For this, you will need to add an implementation of the SinkConfigRegistry interface under the co.kaustab.cdc.config package. 
   6. Once done add this newly created SinkConfigRegistry in the initSink() method of the DynamicPipelineRegistrationConfiguration class and launch your application.
+
+<br>
+<br>
+### Monitoring: ###
+1. bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic offset-storage-topic --from-beginning => Monitor Debezium
+2. You can check the latest CDC items on - http://localhost:8084/
