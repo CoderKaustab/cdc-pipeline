@@ -109,11 +109,8 @@ If a new sink type is needed then the following steps can be performed:
 1. Using the following command we can check the bin log read by the Debezium connector: 
 
     => bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic offset-storage-topic --from-beginning 
-        {"file":"mysql-bin-changelog.000381","pos":120410681,"row":1,"snapshot":true}
-        {"file":"mysql-bin-changelog.000382","pos":396495,"row":1,"snapshot":true}
 
    The Kafka server and the topic details can be configured in the pipeline file -> source.source_config.config.bootstrap.servers, source.source_config.config.offset.storage.topic
-
    You can also check the latest tails from - http://localhost:8084/mysql-rds-connector-v12/tail on the browser. 
 
-2. You can check the "received=", "struct ---->", "Data Changed with Operation" in the log of the application. 
+3. You can check the "received=", "struct ---->", and "Data Changed with Operation" in the log of the application. 
